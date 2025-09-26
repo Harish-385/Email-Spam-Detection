@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 from predict import predict_email
+import os
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # needed for session storage
@@ -132,4 +133,5 @@ def reset():
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render will set PORT
+    app.run(host="0.0.0.0", port=port, debug=True)
