@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Detector</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f5f7fb; color: var(--dark); line-height: 1.6; padding: 20px; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; background-color: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; }
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 30px 20px; text-align: center; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .subtitle { font-size: 1.1rem; opacity: 0.9; }
+        .stats-container { display: flex; justify-content: space-around; padding: 20px; background-color: var(--light); border-bottom: 1px solid #e9ecef; }
+        .stat-card { text-align: center; padding: 15px; flex: 1; margin: 0 10px; background: white; border-radius: var(--border-radius); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+        .stat-value { font-size: 2rem; font-weight: bold; margin: 5px 0; }
+        .stat-label { font-size: 0.9rem; color: var(--gray); }
+        .total-emails .stat-value { color: var(--primary); }
+        .spam-detected .stat-value { color: var(--danger); }
+        .ham-detected .stat-value { color: var(--success); }
+        .actions { display: flex; justify-content: center; padding: 20px; gap: 15px; border-bottom: 1px solid #e9ecef; }
+        .btn { padding: 10px 20px; border: none; border-radius: var(--border-radius); font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
+        .btn-secondary { background-color: var(--light); color: var(--dark); }
+        .btn-secondary:hover { background-color: #e9ecef; transform: translateY(-2px); }
+        .form-container { padding: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark); }
+        textarea { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: var(--border-radius); font-size: 1rem; resize: vertical; transition: var(--transition); }
+        textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2); }
+        .submit-btn { background-color: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: var(--border-radius); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 8px; }
+        .submit-btn:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
+        .result-container { margin-top: 30px; padding: 20px; border-radius: var(--border-radius); text-align: center; display: none; }
+        .result-container.show { display: block; animation: fadeIn 0.5s ease; }
+        .result-spam { background-color: rgba(247, 37, 133, 0.1); border-left: 4px solid var(--danger); }
+        .result-ham { background-color: rgba(76, 201, 240, 0.1); border-left: 4px solid var(--success); }
+        .result-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .result-title { font-size: 1.5rem; margin-bottom: 10px; }
+        .result-spam .result-title { color: var(--danger); }
+        .result-ham .result-title { color: var(--success); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        footer { text-align: center; padding: 20px; color: var(--gray); font-size: 0.9rem; border-top: 1px solid #e9ecef; }
+        @media (max-width: 768px) { .stats-container { flex-direction: column; gap: 15px; } .stat-card { margin: 0; } h1 { font-size: 2rem; } .actions { flex-direction: column; align-items: center; } .btn { width: 100%; justify-content: center; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📧 Email Spam Detection</h1>
+            <p class="subtitle">AI-powered spam detection for your emails</p>
+        </header>
+
+        <div class="stats-container">
+            <div class="stat-card total-emails">
+                <div class="stat-label">Total Emails Tested</div>
+                <div class="stat-value">{{ total_emails }}</div>
+            </div>
+            <div class="stat-card spam-detected">
+                <div class="stat-label">Spam Detected</div>
+                <div class="stat-value">{{ spam_count }}</div>
+            </div>
+            <div class="stat-card ham-detected">
+                <div class="stat-label">Ham Detected</div>
+                <div class="stat-value">{{ ham_count }}</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('stats') }}" class="btn btn-primary">
+                <span>📊</span> View Stats
+            </a>
+            <form method="POST" action="{{ url_for('reset') }}" onsubmit="return confirm('Are you sure you want to reset all data?');">
+                <button type="submit" class="btn btn-secondary">
+                    <span>🔄</span> Reset
+                </button>
+            </form>            
+        </div>
+
+        <div class="form-container">
+            <form id="spam-form" method="POST" action="{{ url_for('index') }}">
+                <div class="form-group">
+                    <label for="email-text">Enter Email Content</label>
+                    <textarea id="email-text" name="email_text" rows="8" placeholder="Paste the content of the email...">{{ request.form.get('email_text', '') }}</textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <span>🔍</span> Check for Spam
+                </button>
+            </form>
+
+            {% if message %}
+            <div id="result-container" class="result-container {% if result == 'spam' %}result-spam{% else %}result-ham{% endif %} show">
+                <div class="result-icon">{% if result == 'spam' %}🚫{% else %}✅{% endif %}</div>
+                <h3 class="result-title">{% if result == 'spam' %}Spam Detected!{% else %}Safe Email{% endif %}</h3>
+                <p id="result-message">{{ message }}</p>
+            </div>
+            {% else %}
+            <div id="result-container" class="result-container">
+                <div class="result-icon">📧</div>
+                <h3 class="result-title">Analysis Complete</h3>
+                <p id="result-message">Your email has been analyzed.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <footer>
+            <p>Email Spam Detector &copy; 2023 | Powered by AI Technology</p>
+        </footer>
+    </div>
+</body>
+</html>

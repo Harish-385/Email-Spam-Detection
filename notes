@@ -1,0 +1,283 @@
+SPAM DETECTION KEYWORDS ANALYSIS
+
+========== SPAM KEYWORDS ==========
+
+URGENCY WORDS:
+- URGENT
+- NOW
+- LIMITED TIME
+- EXPIRES
+- HURRY
+- ACT FAST
+- IMMEDIATELY
+- TODAY ONLY
+- LAST CHANCE
+- DEADLINE
+
+FREE/MONEY WORDS:
+- FREE
+- CASH
+- MONEY
+- PRIZE
+- WIN/WON
+- CONGRATULATIONS
+- SELECTED
+- WINNER
+- GIFT CARD
+- GIVEAWAY
+- EARN
+- MAKE MONEY
+- $$$
+- NO COST
+- BONUS
+
+PROMOTIONAL WORDS:
+- CLICK HERE
+- CLAIM NOW
+- DOWNLOAD
+- SUBSCRIBE
+- UNSUBSCRIBE
+- SPECIAL OFFER
+- DISCOUNT
+- PROMOTION
+- DEAL
+- SAVE
+- 50% OFF
+- GUARANTEED
+
+MEDICAL/ADULT CONTENT:
+- VIAGRA
+- PENIS
+- ENLARGE
+- WEIGHT LOSS
+- DIET PILL
+- LOSE WEIGHT
+- BURN FAT
+- INCHES
+- NATURAL FORMULA
+
+SUSPICIOUS PHRASES:
+- Account suspended
+- Verify your identity
+- Update payment
+- Security alert
+- Virus detected
+- Click to verify
+- Confirm details
+- Act now or lose
+- Risk-free
+- No questions asked
+- Work from home
+- Make money online
+- Home-based business
+
+FINANCIAL SCAMS:
+- Credit report
+- Loan approved
+- Debt relief
+- Investment opportunity
+- Get rich quick
+- Financial freedom
+- Easy money
+- Passive income
+- No experience required
+
+========== HAM (NOT SPAM) KEYWORDS ==========
+
+PROFESSIONAL WORDS:
+- Meeting
+- Project
+- Report
+- Deadline
+- Schedule
+- Client
+- Presentation
+- Analysis
+- Budget
+- Timeline
+- Conference
+- Training
+- Invoice
+
+WORKPLACE COMMUNICATION:
+- Team
+- Office
+- Manager
+- Department
+- Policy
+- Procedure
+- Review
+- Feedback
+- Update
+- Status
+- Progress
+- Discussion
+
+POLITE EXPRESSIONS:
+- Please
+- Thank you
+- Thanks
+- Appreciate
+- Could you
+- Would you
+- Let me know
+- Best regards
+- Sincerely
+- Hope
+- Help
+
+PERSONAL COMMUNICATION:
+- Birthday
+- Holiday
+- Vacation
+- Family
+- Friend
+- Personal
+- Sorry
+- Congratulations (genuine)
+- Good luck
+- Take care
+
+SCHEDULING/PLANNING:
+- Tomorrow
+- Next week
+- This Friday
+- Monday
+- Calendar
+- Appointment
+- Reschedule
+- Postpone
+- Confirm
+- Available
+
+WORK-RELATED ACTIONS:
+- Complete
+- Finish
+- Submit
+- Approve
+- Review
+- Check
+- Verify (legitimate)
+- Upload
+- Download (work files)
+- Forward
+- Attach
+- Send
+
+========== PATTERNS TO WATCH ==========
+
+SPAM PATTERNS:
+- ALL CAPS text
+- Multiple exclamation marks (!!!)
+- Misspellings (intentional to avoid filters)
+- Special characters replacing letters (@, $, 3)
+- No proper sender identification
+- Generic greetings (Dear Customer)
+- Poor grammar and spelling
+- Suspicious links/attachments
+
+HAM PATTERNS:
+- Proper capitalization
+- Professional tone
+- Specific names and details
+- Clear sender identification
+- Relevant subject matter
+- Proper grammar
+- Context-appropriate content
+- Legitimate business communication
+
+========== SCORING SYSTEM ==========
+
+SPAM INDICATORS (+points):
+- Each urgency word: +2 points
+- Each money/free word: +3 points
+- ALL CAPS words: +1 point each
+- Multiple !!! : +2 points
+- Suspicious links: +5 points
+
+HAM INDICATORS (-points):
+- Professional words: -1 point each
+- Proper names: -2 points
+- Work-related terms: -1 point each
+- Polite expressions: -1 point each
+
+THRESHOLD:
+- Score > 5: Likely SPAM
+- Score 0-5: Uncertain (manual review)
+- Score < 0: Likely HAM (legitimate)
+
+========== TEST SENTENCES FOR APP.PY ==========
+
+SPAM TEST SENTENCES (should be detected as SPAM):
+
+1. "URGENT! You have won a FREE iPhone 15! Click here to claim your prize NOW! Limited time offer!"
+
+2. "CONGRATULATIONS! You've been selected for a $1000 Walmart gift card! Claim now before it expires!"
+
+3. "Make $5000/week working from home! No experience required. Start earning today!"
+
+4. "FREE VIAGRA! Get 50% off on all medications. No prescription needed. Order now!"
+
+5. "URGENT: Your bank account has been suspended. Click here to verify your details immediately!"
+
+6. "LOSE 20 POUNDS IN 2 WEEKS! Revolutionary diet pill. Money back guarantee!"
+
+7. "FREE CASH! You've been selected for a $500 cash prize. Claim within 24 hours!"
+
+8. "MAKE MONEY FAST! Earn $1000/day from home. No investment needed!"
+
+9. "Your computer has been infected with 15 viruses! Download our antivirus software NOW!"
+
+10. "FREE GIFT CARD! Get a $100 Amazon gift card for FREE! Click to claim!"
+
+HAM TEST SENTENCES (should be detected as NOT SPAM):
+
+1. "Hi John, can you send me the meeting notes from yesterday's presentation?"
+
+2. "Thanks for your help with the project. The client was very satisfied with the results."
+
+3. "Don't forget about the team lunch tomorrow at 12 PM in the conference room."
+
+4. "I'll be working from home today due to the weather conditions."
+
+5. "The quarterly report is ready for review. Please check your email for the attachment."
+
+6. "Happy birthday! Hope you have a great day and enjoy your celebration."
+
+7. "Can you please update the project timeline by end of day Friday?"
+
+8. "The office will be closed on Monday for the national holiday."
+
+9. "I've attached the invoice for last month's services. Please process payment at your earliest convenience."
+
+10. "Let's schedule a call next week to discuss the new proposal and requirements."
+
+BORDERLINE TEST SENTENCES (interesting edge cases):
+
+1. "Free webinar on digital marketing strategies. Register now for valuable insights!"
+
+2. "Your Netflix subscription expires tomorrow. Please update your payment method."
+
+3. "Congratulations on your promotion! The team is excited to work with you in your new role."
+
+4. "Limited time offer: 20% discount on our premium software package for businesses."
+
+5. "Urgent: Please review the contract changes before tomorrow's meeting."
+
+COPY-PASTE READY TESTS:
+=======================
+
+SPAM TEST 1:
+URGENT! You have won a FREE iPhone 15! Click here to claim your prize NOW! Limited time offer!
+
+SPAM TEST 2:
+Make $5000/week working from home! No experience required. Start earning today!
+
+HAM TEST 1:
+Hi John, can you send me the meeting notes from yesterday's presentation?
+
+HAM TEST 2:
+Thanks for your help with the project. The client was very satisfied with the results.
+
+BORDERLINE TEST:
+Free webinar on digital marketing strategies. Register now for valuable insights!

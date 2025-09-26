@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Statistics</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background-color: var(--light);
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            flex: 1;
+            margin: 0 10px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .total-emails .stat-value {
+            color: var(--primary);
+        }
+
+        .spam-detected .stat-value {
+            color: var(--danger);
+        }
+
+        .ham-detected .stat-value {
+            color: var(--success);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            gap: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-card h2 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        .history-container {
+            padding: 0 30px 30px;
+        }
+
+        .history-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .history-card h2 {
+            padding: 20px;
+            margin: 0;
+            background-color: var(--light);
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: var(--light);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .prediction-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .prediction-spam {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+
+        .prediction-ham {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+
+        .email-preview {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        @media (max-width: 992px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stat-card {
+                margin: 0;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Email Statistics</h1>
+            <p class="subtitle">Detailed analysis of email spam detection</p>
+        </header>
+        
+        <div class="stats-container">
+            <div class="stat-card total-emails">
+                <div class="stat-label">Total Emails Tested</div>
+                <div class="stat-value">{{ total_emails }}</div>
+            </div>
+            <div class="stat-card spam-detected">
+                <div class="stat-label">Spam Detected</div>
+                <div class="stat-value">{{ spam_count }}</div>
+            </div>
+            <div class="stat-card ham-detected">
+                <div class="stat-label">Ham Detected</div>
+                <div class="stat-value">{{ ham_count }}</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <span>🏠</span> Home
+            </a>
+            <form method="POST" action="{{ url_for('reset') }}" onsubmit="return confirm('Are you sure you want to reset all data?');">
+                <button type="submit" class="btn btn-secondary">
+                    <span>🔄</span> Reset
+                </button>
+            </form>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-card">
+                <h2>📈 Distribution</h2>
+                {% if chart_pie %}
+                    {{ chart_pie|safe }}
+                {% else %}
+                    <div class="chart-placeholder">
+                        Pie chart will be displayed here
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="chart-card">
+                <h2>📅 Timeline</h2>
+                {% if chart_bar %}
+                    {{ chart_bar|safe }}
+                {% else %}
+                    <div class="chart-placeholder">
+                        Bar chart will be displayed here
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="history-container">
+            <div class="history-card">
+                <h2>🕒 Recent Predictions</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Prediction</th>
+                            <th>Email Preview</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in history %}
+                            <tr>
+                                <td>{{ row.timestamp }}</td>
+                                <td>
+                                    <span class="prediction-badge {% if row.prediction == 'Spam' %}prediction-spam{% else %}prediction-ham{% endif %}">
+                                        {{ row.prediction }}
+                                    </span>
+                                </td>
+                                <td class="email-preview">{{ row.email_preview }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Email Spam Detector &copy; 2023 | Statistics Dashboard</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add some interactivity to the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to stats cards
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'fadeInUp 0.5s ease forwards';
+            });
+            
+            // Add hover effect to table rows
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.transition = 'transform 0.2s ease';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+        
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .stat-card {
+                opacity: 0;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
